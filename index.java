@@ -6,7 +6,6 @@ class index
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-        
                 
 // o - miss, * - hint, X - sunk
         char[][] board = new char[7][7];
@@ -18,9 +17,22 @@ class index
 
         askForName(scanner);
         printBoard(board);
-        askForPosition(scanner, name);
-        turnInputIntoIndex(position);
+        askForPosition(scanner);
+        // turnInputIntoIndex(position);
+        
+        setShipsRandomly(board, random, 3, 1); 
+        setShipsRandomly(board, random, 2, 2);
+        setShipsRandomly(board, random, 1, 4); 
+        // canPlaceShip(board,  row, col, size, vertical);
+
+        printBoard(board);
+
 }
+
+    //     field
+    static String name; 
+    static String position;
+
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
         System.out.flush();
@@ -44,10 +56,6 @@ class index
                         "\n"+ "G | "+ board[6][0]+" | "+board[6][1]+" | "+board[6][2]+" | "+ board[6][3]+" | "+board[6][4]+" | "+board[6][5]+" | "+board[6][6]
                         );
     }
-    
-    //     field
-    static String name; 
-    static String position;
 
     public static void askForName(Scanner scanner){
         cleanConsole();
@@ -58,9 +66,9 @@ class index
         name = firstLetter + lastLetters; // Upcasing the name
     }
 
-    public static void askForPosition(Scanner scanner, String name){
+    public static String askForPosition(Scanner scanner){
         System.out.print("\n" + name + ", choose the position: ");
-        position = scanner.nextLine().toUpperCase();
+        return scanner.nextLine().toUpperCase();
     }    
 
     public static void turnInputIntoIndex(String position) {
@@ -130,10 +138,84 @@ class index
                 return;
         }
     }
+
+    public static void setShipsRandomly(char[][] board, Random random, int size, int count) {
+        for (int i = 0; i < count; i++) {
+            boolean placed = false;
+
+            while (!placed) {
+                int row = random.nextInt(7);
+                int col = random.nextInt(7);
+                boolean vertical = random.nextBoolean();
+
+                if (canPlaceShip(board, row, col, size, vertical)) {
+                    for (int j = 0; j < size; j++) {
+                        if (vertical) {
+                            board[row + j][col] = 'X';
+                        } else {
+                            board[row][col + j] = 'X';
+                        }
+                    }
+                    placed = true;
+                }
+            }
+        }
+    }
+
+    public static boolean canPlaceShip(char[][] board, int row, int col, int size, boolean vertical) {
+        if (vertical) {
+            if (row + size > board.length) return false; // of bounds vertically
+            for (int i = 0; i < size; i++) {
+                if (board[row + i][col] == 'X') return false;
     
-
-        //public static void setShipsRandomly() {
-        
-    //}
-
+                // above and below 
+                if (row + i > 0 && board[row + i - 1][col] == 'X') return false; // above
+                if (row + i < board.length - 1 && board[row + i + 1][col] == 'X') return false; // Below
+                
+                // diagonal
+                if (row + i > 0) {
+                    if (col > 0 && board[row + i - 1][col - 1] == 'X') return false; 
+                    if (col < board[0].length - 1 && board[row + i - 1][col + 1] == 'X') return false;
+                }
+                if (row + i < board.length - 1) {
+                    if (col > 0 && board[row + i + 1][col - 1] == 'X') return false; 
+                    if (col < board[0].length - 1 && board[row + i + 1][col + 1] == 'X') return false; 
+                }
+            }
+    
+            if (col > 0 && (board[row][col - 1] == 'X' || (row + size - 1 < board.length && board[row + size - 1][col - 1] == 'X'))) {
+                return false; // left
+            }
+            if (col < board[0].length - 1 && (board[row][col + 1] == 'X' || (row + size - 1 < board.length && board[row + size - 1][col + 1] == 'X'))) {
+                return false; // right
+            }
+        } else {
+            if (col + size > board[0].length) return false; //  out of bounds horizontally
+            for (int i = 0; i < size; i++) {
+                if (board[row][col + i] == 'X') return false;
+                if (col + i > 0 && board[row][col + i - 1] == 'X') return false; // left
+                if (col + i < board[0].length - 1 && board[row][col + i + 1] == 'X') return false; // right
+                
+                // diagonals
+                if (row > 0) {
+                    if (col + i > 0 && board[row - 1][col + i - 1] == 'X') return false; 
+                    if (col + i < board[0].length - 1 && board[row - 1][col + i + 1] == 'X') return false; 
+                }
+                if (row < board.length - 1) {
+                    if (col + i > 0 && board[row + 1][col + i - 1] == 'X') return false; 
+                    if (col + i < board[0].length - 1 && board[row + 1][col + i + 1] == 'X') return false; 
+                }
+            }
+            if (row > 0 && (board[row - 1][col] == 'X' || (col + size - 1 < board[0].length && board[row - 1][col + size - 1] == 'X'))) {
+                return false;
+            }
+            if (row < board.length - 1 && (board[row + 1][col] == 'X' || (col + size - 1 < board[0].length && board[row + 1][col + size - 1] == 'X'))) {
+                return false; 
+            }
+        }
+        return true; 
+    }
+    
 }
+
+    
