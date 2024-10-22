@@ -1,26 +1,20 @@
+import java.util.Random;
 import java.util.Scanner;
+        
 class index {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
-        // o - miss, * - hint, X - sunk
+        Random random = new Random();
+                
+// o - miss, * - hint, X - sunk
+        char[][] board = new char[7][7];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                board[i][j] = ' '; 
+            }
+        }
 
-        char[][] board = {{' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                          {' ', 'o', ' ', ' ', ' ', ' ', ' '},
-                          {' ', ' ', ' ', ' ', ' ', '*', ' '},
-                          {' ', ' ', ' ', ' ', 'X', ' ', ' '},
-                          {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                          {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                          {' ', ' ', ' ', ' ', ' ', ' ', ' '}};
-
-
-        askForName();
-        
-        String name = scanner.nextLine();
-        printBoard(board);
-        System.out.println(name);
-
-
+        askForName(scanner, board);
 }
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
@@ -46,11 +40,20 @@ class index {
                         );
     }
 
-    public static void askForName(){
+    public static void askForName(Scanner scanner, char[][] board){
+        cleanConsole();
         System.out.print("Type down your name: ");
+        String toScan = scanner.nextLine().toLowerCase();
+        String name1 = toScan.substring(0, 1).toUpperCase();
+        String name2 = toScan.substring(1);
+        String name = name1+name2; //Upcasing the name
+
+        cleanConsole();
+        printBoard(board);
+        System.out.print("\n" + name + ", choose the position: "); // Putting name into ask
     }
 
-    //public static void setShipsOnPosisions() {
+    //public static void setShipsRandomly() {
         
     //}
 }
