@@ -1,20 +1,24 @@
 import java.util.Random;
 import java.util.Scanner;
         
-class index {
+class index 
+{
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
+        
                 
 // o - miss, * - hint, X - sunk
         char[][] board = new char[7][7];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                board[i][j] = ' '; 
+                board[i][j] = ' ';
             }
         }
 
-        askForName(scanner, board);
+        askForName(scanner);
+        printBoard(board);
+        askForPosition(scanner, name);
 }
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
@@ -39,21 +43,28 @@ class index {
                         "\n"+ "G | "+ board[6][0]+" | "+board[6][1]+" | "+board[6][2]+" | "+ board[6][3]+" | "+board[6][4]+" | "+board[6][5]+" | "+board[6][6]
                         );
     }
+    
+    static String name; // now name is a field
 
-    public static void askForName(Scanner scanner, char[][] board){
+    public static void askForName(Scanner scanner){
         cleanConsole();
         System.out.print("Type down your name: ");
         String toScan = scanner.nextLine().toLowerCase();
-        String name1 = toScan.substring(0, 1).toUpperCase();
-        String name2 = toScan.substring(1);
-        String name = name1+name2; //Upcasing the name
-
-        cleanConsole();
-        printBoard(board);
-        System.out.print("\n" + name + ", choose the position: "); // Putting name into ask
+        String firstLetter = toScan.substring(0, 1).toUpperCase();
+        String lastLetters = toScan.substring(1);
+        name = firstLetter + lastLetters; // Upcasing the name
     }
+
+    public static void askForPosition(Scanner scanner, String name){
+        System.out.print("\n" + name + ", choose the position: ");
+        String position = scanner.nextLine().toUpperCase();
+    }    
 
     //public static void setShipsRandomly() {
         
     //}
+
+    public static void turnInputIntoIndex(int index, char[][] board) {
+        
+    }
 }
