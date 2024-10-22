@@ -19,6 +19,7 @@ class index
         askForName(scanner);
         printBoard(board);
         askForPosition(scanner, name);
+        turnInputIntoIndex(position);
 }
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
@@ -44,7 +45,9 @@ class index
                         );
     }
     
-    static String name; // now name is a field
+    //     field
+    static String name; 
+    static String position;
 
     public static void askForName(Scanner scanner){
         cleanConsole();
@@ -57,14 +60,80 @@ class index
 
     public static void askForPosition(Scanner scanner, String name){
         System.out.print("\n" + name + ", choose the position: ");
-        String position = scanner.nextLine().toUpperCase();
+        position = scanner.nextLine().toUpperCase();
     }    
 
-    //public static void setShipsRandomly() {
+    public static void turnInputIntoIndex(String position) {
+        String[] parts = position.split(" ");
+        if (parts.length != 2) {
+            System.out.println("Invalid input format. Try again...");
+            return; // make it loop
+        }
+
+        String rowPart= parts[0].toUpperCase(); 
+        String colPart = parts[1];
+
+        String rowIndex = "";
+        String colIndex = "";
+    
+        switch (rowPart) {
+            case "A": 
+                rowIndex = "0";
+                break;
+            case "B": 
+                rowIndex = "1";
+                break;
+            case "C": 
+                rowIndex = "2";
+                break;
+            case "D": 
+                rowIndex = "3";
+                break;
+            case "E":
+                rowIndex = "4";
+                break;
+            case "F": 
+                rowIndex = "5";
+                break;
+            case "G": 
+                rowIndex = "6";
+                break;
+            default:
+                System.out.println("Invalid row input");
+                return;
+        }
+
+        switch (colPart) {
+            case "1":
+                colIndex = "0";
+                break;
+            case "2":
+                colIndex = "1";
+                break;
+            case "3":
+                colIndex = "2";
+                break;
+            case "4":
+                colIndex = "3";
+                break;
+            case "5":
+                colIndex = "4";
+                break;
+            case "6":
+                colIndex = "5";
+                break;
+            case "7":
+                colIndex = "6";
+                break;
+            default:
+                System.out.println("Invalid column input");
+                return;
+        }
+    }
+    
+
+        //public static void setShipsRandomly() {
         
     //}
 
-    public static void turnInputIntoIndex(int index, char[][] board) {
-        
-    }
 }
