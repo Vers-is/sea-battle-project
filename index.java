@@ -3,6 +3,7 @@ import java.util.Scanner;
         
 class index 
 {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -16,22 +17,22 @@ class index
         }
 
         askForName(scanner);
-        printBoard(board);
-        askForPosition(scanner);
-        // turnInputIntoIndex(position);
-        
+
         setShipsRandomly(board, random, 3, 1); 
         setShipsRandomly(board, random, 2, 2);
         setShipsRandomly(board, random, 1, 4); 
-        // canPlaceShip(board,  row, col, size, vertical);
-
         printBoard(board);
+        askForPosition(scanner);
+        turnInputIntoIndex(position); 
+        playerTurn(board); 
 
 }
 
     //     field
     static String name; 
     static String position;
+    static int rowIndex;
+    static int colIndex;
 
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
@@ -66,77 +67,45 @@ class index
         name = firstLetter + lastLetters; // Upcasing the name
     }
 
-    public static String askForPosition(Scanner scanner){
+    public static void askForPosition(Scanner scanner){
         System.out.print("\n" + name + ", choose the position: ");
-        return scanner.nextLine().toUpperCase();
+        position = scanner.nextLine().toUpperCase();
     }    
 
     public static void turnInputIntoIndex(String position) {
         String[] parts = position.split(" ");
         if (parts.length != 2) {
             System.out.println("Invalid input format. Try again...");
-            return; // make it loop
+            return; 
         }
 
-        String rowPart= parts[0].toUpperCase(); 
-        String colPart = parts[1];
-
-        String rowIndex = "";
-        String colIndex = "";
+        char rowChar = position.charAt(0);
+        char colChar = position.charAt(1);
     
-        switch (rowPart) {
-            case "A": 
-                rowIndex = "0";
-                break;
-            case "B": 
-                rowIndex = "1";
-                break;
-            case "C": 
-                rowIndex = "2";
-                break;
-            case "D": 
-                rowIndex = "3";
-                break;
-            case "E":
-                rowIndex = "4";
-                break;
-            case "F": 
-                rowIndex = "5";
-                break;
-            case "G": 
-                rowIndex = "6";
-                break;
-            default:
-                System.out.println("Invalid row input");
-                return;
+        switch (rowChar) {
+            case 'A': rowIndex = 0; break;
+            case 'B': rowIndex = 1; break;
+            case 'C': rowIndex = 2; break;
+            case 'D': rowIndex = 3; break;
+            case 'E': rowIndex = 4; break;
+            case 'F': rowIndex = 5; break;
+            case 'G': rowIndex = 6; break;
+            default: System.out.println("Invalid row input");
+            return;
         }
 
-        switch (colPart) {
-            case "1":
-                colIndex = "0";
-                break;
-            case "2":
-                colIndex = "1";
-                break;
-            case "3":
-                colIndex = "2";
-                break;
-            case "4":
-                colIndex = "3";
-                break;
-            case "5":
-                colIndex = "4";
-                break;
-            case "6":
-                colIndex = "5";
-                break;
-            case "7":
-                colIndex = "6";
-                break;
-            default:
-                System.out.println("Invalid column input");
-                return;
+        switch (colChar) {
+            case '1': colIndex = 0; break;
+            case '2': colIndex = 1; break;
+            case '3': colIndex = 2; break;
+            case '4': colIndex = 3; break;
+            case '5': colIndex = 4; break;
+            case '6': colIndex = 5; break;
+            case '7': colIndex = 6; break;
+            default: System.out.println("Invalid column input");
+            return;
         }
+
     }
 
     public static void setShipsRandomly(char[][] board, Random random, int size, int count) {
@@ -215,6 +184,23 @@ class index
         }
         return true; 
     }
+
+    public static char [][] playerTurn(char[][] board){    
+            if (board[rowIndex][colIndex] == 'X') {
+                board[rowIndex ][colIndex] = '*';  
+                System.out.println("Hit!");
+            } else if (board[rowIndex][colIndex] == ' ') {
+                board[rowIndex][colIndex] = 'o'; 
+                System.out.println("Miss...");
+            } else {
+                System.out.println("You already played this move. Try again.");
+                return board;  
+            }
+        
+        return board;
+    }
+
+
     
 }
 
