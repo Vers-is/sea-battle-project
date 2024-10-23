@@ -25,7 +25,7 @@ class index
         askForPosition(scanner);
         turnInputIntoIndex(position); 
         playerTurn(board); 
-
+        printBoard(board);
 }
 
     //     field
@@ -79,8 +79,8 @@ class index
             return; 
         }
 
-        char rowChar = position.charAt(0);
-        char colChar = position.charAt(1);
+        char rowChar = parts[0].charAt(0); 
+        char colChar = parts[1].charAt(0);
     
         switch (rowChar) {
             case 'A': rowIndex = 0; break;
