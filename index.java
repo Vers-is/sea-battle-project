@@ -11,8 +11,8 @@ class Index {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
                 
-// o - miss, * - hint, X - sunk 
-// 222 - cheat code
+// o - miss, * - hint, X - sunk
+// 222 - cheat
 
         int shots;
         HashMap<String, Integer> players = new HashMap<>();
@@ -34,13 +34,13 @@ class Index {
         printBoard(board);
             shots = 0;
         while (!checkForShips(board, 0)) {
-            boolean validInput = true;
+            boolean validInput = false;
             
-            while (validInput) {
+            while (!validInput) {
                 askForPosition(scanner, board);
                 if (position.equals("222")) {
                     applyCheat(board);
-                    validInput = false; 
+                    validInput = true; 
                     break;
                 }
 
