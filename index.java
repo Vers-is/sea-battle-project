@@ -1,31 +1,60 @@
 import java.util.Random;
 import java.util.Scanner;
         
-class index 
-{
+class index {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
                 
 // o - miss, * - hint, X - sunk
-        char[][] board = new char[7][7];
+
+        while(true){
+            char[][] board = new char[7][7];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 board[i][j] = ' ';
             }
         }
-
         askForName(scanner);
-
+        //initBoard(board);
         setShipsRandomly(board, random, 3, 1); 
         setShipsRandomly(board, random, 2, 2);
         setShipsRandomly(board, random, 1, 4); 
         printBoard(board);
-        askForPosition(scanner);
-        turnInputIntoIndex(position); 
-        playerTurn(board); 
-        printBoard(board);
+
+        while(!(checkForShips(board, 0))){
+            do {
+                askForPosition(scanner, board);
+                applyCheat(board);
+                rowIndex = returnRowIndex(position);
+                colIndex = returnColumnIndex(position);
+            } while (rowIndex == -1 || colIndex == -1);
+            
+            }    
+            cleanConsole();
+            playerTurn(board, rowIndex, colIndex);
+            printBoard(board);
+            if (checkForShips(board, 0)){
+                cleanConsole();
+                System.out.println("Win!");
+                break;
+            } 
+        }
+        
+        gameOver(name);
+            while (true) { 
+                String command = scanner.nextLine().toLowerCase();
+                if (command.equals("no")){
+                    return;
+                } else if (command.equals("yes")){
+                    break;
+                } else {
+                    System.out.print("Invalid input. Try again: ");
+                }    
+            }
+        }
+
 }
 
     //     field
@@ -38,9 +67,8 @@ class index
         System.out.print("\033[H\033[2J"); 
         System.out.flush();
     }
-
+  
     public static void printBoard(char[][] board){
-        cleanConsole();
         System.out.println("    1   2   3   4   5   6   7"+
                         "\n"+ "A | "+ board[0][0]+" | "+board[0][1]+" | "+board[0][2]+" | "+ board[0][3]+" | "+board[0][4]+" | "+board[0][5]+" | "+board[0][6]+
                         "\n"+ "--+---+---+---+---+---+---+---"+
@@ -67,46 +95,80 @@ class index
         name = firstLetter + lastLetters; // Upcasing the name
     }
 
-    public static void askForPosition(Scanner scanner){
-        System.out.print("\n" + name + ", choose the position: ");
+    public static String removeSpaces(String position) {
+        return position.replaceAll("\\s+", ""); 
+    }
+    
+    public static void askForPosition(Scanner scanner, char[][] board){
+        System.out.print("\n" + name + ", choose the position or type 'WINNOW' to win: ");
         position = scanner.nextLine().toUpperCase();
-    }    
-
-    public static void turnInputIntoIndex(String position) {
-        String[] parts = position.split(" ");
-        if (parts.length != 2) {
-            System.out.println("Invalid input format. Try again...");
-            return; 
+        position = removeSpaces(position);
+    
+        if (position.equals("222")) {
+            applyCheat(board);
         }
+    }    
+    
+    public static void applyCheat(char[][] board) {
 
-        char rowChar = parts[0].charAt(0); 
-        char colChar = parts[1].charAt(0);
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == 'X') {
+                    board[i][j] = '*';  // Mark as hit
+                }
+            }
+        }
+        cleanConsole();
+        System.out.println("Cheat code activated!");
+    }
+    
+        
+    public static int returnRowIndex(String position) {
+        position = removeSpaces(position); 
+        if (position.length() != 2) {
+            System.out.println("Invalid input format. \nTry again: ");
+            return -1; 
+        }
+    
+        char rowChar = position.charAt(0); 
     
         switch (rowChar) {
-            case 'A': rowIndex = 0; break;
-            case 'B': rowIndex = 1; break;
-            case 'C': rowIndex = 2; break;
-            case 'D': rowIndex = 3; break;
-            case 'E': rowIndex = 4; break;
-            case 'F': rowIndex = 5; break;
-            case 'G': rowIndex = 6; break;
-            default: System.out.println("Invalid row input");
-            return;
+            case 'A': return 0;
+            case 'B': return 1;
+            case 'C': return 2;
+            case 'D': return 3;
+            case 'E': return 4;
+            case 'F': return 5;
+            case 'G': return 6;
+            default:  
+                System.out.print("Invalid row input. ");
+                return -1;  
         }
-
-        switch (colChar) {
-            case '1': colIndex = 0; break;
-            case '2': colIndex = 1; break;
-            case '3': colIndex = 2; break;
-            case '4': colIndex = 3; break;
-            case '5': colIndex = 4; break;
-            case '6': colIndex = 5; break;
-            case '7': colIndex = 6; break;
-            default: System.out.println("Invalid column input");
-            return;
-        }
-
     }
+    
+    public static int returnColumnIndex(String position) {
+        position = removeSpaces(position); 
+        if (position.length() != 2) {
+            System.out.print("Invalid input format. \nTry again: ");
+            return -1; 
+        }
+    
+        char colChar = position.charAt(1);
+    
+        switch (colChar) {
+            case '1': return 0;
+            case '2': return 1;
+            case '3': return 2;
+            case '4': return 3;
+            case '5': return 4;
+            case '6': return 5;
+            case '7': return 6;
+            default: 
+                System.out.print("Invalid column input. ");
+                return -1; 
+        }
+    }
+    
 
     public static void setShipsRandomly(char[][] board, Random random, int size, int count) {
         for (int i = 0; i < count; i++) {
@@ -185,7 +247,8 @@ class index
         return true; 
     }
 
-    public static char [][] playerTurn(char[][] board){    
+    public static char [][] playerTurn(char[][] board, int rowIndex, int colIndex ){    
+            
             if (board[rowIndex][colIndex] == 'X') {
                 board[rowIndex ][colIndex] = '*';  
                 System.out.println("Hit!");
@@ -194,14 +257,27 @@ class index
                 System.out.println("Miss...");
             } else {
                 System.out.println("You already played this move. Try again.");
-                return board;  
+                //return board;  
             }
-        
         return board;
     }
 
-
+    public static boolean checkForShips(char[][] board, int ships){
     
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[i].length; j++) {
+            if (board[i][j] == 'X') {  
+                ships++;
+            }
+        }
+    }
+        return ships == 0;
+    }   
+        
+    public static void gameOver(String name){
+        System.out.println(name + ", do you want to continue? \nYES \nNO");
+    }
+
 }
 
     
