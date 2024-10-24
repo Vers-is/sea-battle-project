@@ -1,7 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
         
-class index {
+class Index {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -9,54 +9,71 @@ class index {
                 
 // o - miss, * - hint, X - sunk
 
+        int shots = 0;
+
         while(true){
+
             char[][] board = new char[7][7];
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                board[i][j] = ' ';
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    board[i][j] = ' ';
+                }  
             }
-        }
+            
         askForName(scanner);
-        //initBoard(board);
         setShipsRandomly(board, random, 3, 1); 
         setShipsRandomly(board, random, 2, 2);
         setShipsRandomly(board, random, 1, 4); 
         printBoard(board);
 
-        while(!(checkForShips(board, 0))){
-            do {
+        while (!checkForShips(board, 0)) {
+            boolean validInput = false;
+            
+            while (!validInput) {
                 askForPosition(scanner, board);
-                applyCheat(board);
+                if (position.equals("222")) {
+                    applyCheat(board);
+                    validInput = true; 
+                    break;
+                }
+
                 rowIndex = returnRowIndex(position);
                 colIndex = returnColumnIndex(position);
-            } while (rowIndex == -1 || colIndex == -1);
+                shots++;
+                if (rowIndex != -1 && colIndex != -1) {
+                    validInput = true;
+                } else {
+                    System.out.println("Invalid input, please try again.");
+                }
+            }
             
-            }    
-            cleanConsole();
-            playerTurn(board, rowIndex, colIndex);
-            printBoard(board);
-            if (checkForShips(board, 0)){
+            if (!position.equals("222")) {
+                cleanConsole();
+                playerTurn(board, rowIndex, colIndex);
+                printBoard(board);
+            }
+            
+            if (checkForShips(board, 0)) {
                 cleanConsole();
                 System.out.println("Win!");
+                System.out.println("Your amount of shots: " + shots + "\n");
                 break;
-            } 
+            }
         }
         
         gameOver(name);
-            while (true) { 
-                String command = scanner.nextLine().toLowerCase();
-                if (command.equals("no")){
-                    return;
-                } else if (command.equals("yes")){
-                    break;
-                } else {
-                    System.out.print("Invalid input. Try again: ");
-                }    
+        while (true) {
+            String command = scanner.nextLine().toLowerCase();
+            if (command.equals("no")) {
+                return;
+            } else if (command.equals("yes")) {
+                break;
+            } else {
+                System.out.print("Invalid input. Try again: ");
             }
         }
-
+    }
 }
-
     //     field
     static String name; 
     static String position;
@@ -100,7 +117,7 @@ class index {
     }
     
     public static void askForPosition(Scanner scanner, char[][] board){
-        System.out.print("\n" + name + ", choose the position or type 'WINNOW' to win: ");
+        System.out.print("\n" + name + ", choose the position: ");
         position = scanner.nextLine().toUpperCase();
         position = removeSpaces(position);
     
@@ -114,7 +131,7 @@ class index {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == 'X') {
-                    board[i][j] = '*';  // Mark as hit
+                    board[i][j] = '*';  
                 }
             }
         }
