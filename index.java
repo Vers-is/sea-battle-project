@@ -11,7 +11,8 @@ class Index {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
                 
-// o - miss, * - hint, X - sunk
+// o - miss, * - hint, X - sunk 
+// 222 - cheat code
 
         int shots;
         HashMap<String, Integer> players = new HashMap<>();
