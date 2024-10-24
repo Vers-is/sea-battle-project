@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
         
@@ -9,7 +13,9 @@ class Index {
                 
 // o - miss, * - hint, X - sunk
 
-        int shots = 0;
+        int shots;
+        HashMap<String, Integer> players = new HashMap<>();
+            
 
         while(true){
 
@@ -25,15 +31,15 @@ class Index {
         setShipsRandomly(board, random, 2, 2);
         setShipsRandomly(board, random, 1, 4); 
         printBoard(board);
-
+            shots = 0;
         while (!checkForShips(board, 0)) {
-            boolean validInput = false;
+            boolean validInput = true;
             
-            while (!validInput) {
+            while (validInput) {
                 askForPosition(scanner, board);
                 if (position.equals("222")) {
                     applyCheat(board);
-                    validInput = true; 
+                    validInput = false; 
                     break;
                 }
 
@@ -47,7 +53,7 @@ class Index {
                 }
             }
             
-            if (!position.equals("222")) {
+            if (!position.equals("222")) { 
                 cleanConsole();
                 playerTurn(board, rowIndex, colIndex);
                 printBoard(board);
@@ -57,6 +63,7 @@ class Index {
                 cleanConsole();
                 System.out.println("Win!");
                 System.out.println("Your amount of shots: " + shots + "\n");
+                players.put( name, shots);
                 break;
             }
         }
@@ -65,6 +72,9 @@ class Index {
         while (true) {
             String command = scanner.nextLine().toLowerCase();
             if (command.equals("no")) {
+                cleanConsole();
+                System.out.println("The list of players: "); 
+                printSortedPlayers(players);
                 return;
             } else if (command.equals("yes")) {
                 break;
@@ -79,6 +89,16 @@ class Index {
     static String position;
     static int rowIndex;
     static int colIndex;
+
+     public static void printSortedPlayers(HashMap<String, Integer> players) {
+        List<Map.Entry<String, Integer>> sortedPlayers = new ArrayList<>(players.entrySet());
+        
+        sortedPlayers.sort(Map.Entry.comparingByValue());
+
+        for (Map.Entry<String, Integer> entry : sortedPlayers) {
+            System.out.println(entry.getKey() + "  -  " + entry.getValue());
+        }
+    }
 
     public static void cleanConsole(){ 
         System.out.print("\033[H\033[2J"); 
